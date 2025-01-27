@@ -1,6 +1,10 @@
 @asp_HostAddress = http://localhost:5263
 
-GET {{asp_HostAddress}}/weatherforecast/
-Accept: application/json
+POST {{asp_HostAddress}}/
+Content-type: application/json
 
+{
+    "name": 1,
+    "age": "30"
+}
 ###
