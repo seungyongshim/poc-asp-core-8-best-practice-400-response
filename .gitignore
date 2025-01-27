@@ -16,7 +16,8 @@
 # Mono auto generated files
 mono_crash.*
 
-[Oo]bj/
+**/[Oo]bj/*.json
+**/[Oo]bj/*.cache
 
 # Build results
 [Dd]ebug/
