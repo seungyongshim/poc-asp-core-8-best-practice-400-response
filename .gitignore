@@ -16,7 +16,7 @@
 # Mono auto generated files
 mono_crash.*
 
-**/obj
+[Oo]bj/
 
 # Build results
 [Dd]ebug/
