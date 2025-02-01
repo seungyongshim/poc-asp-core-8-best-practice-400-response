@@ -8,3 +8,12 @@ Content-type: application/json
     "age": "30"
 }
 ###
+
+POST {{asp_HostAddress}}/2
+Content-type: application/json
+
+{
+    "name": 1,
+    "age": "30"
+}
+###

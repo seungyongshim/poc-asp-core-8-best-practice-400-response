@@ -1,27 +1,39 @@
 using System.Diagnostics;
+using asp;
+using Microsoft.AspNetCore.Diagnostics;
+using Microsoft.AspNetCore.HttpLogging;
+using Microsoft.AspNetCore.Mvc;
 
 var builder = WebApplication.CreateBuilder(args);
 
-
+builder.Services.AddHttpLogging(o =>
+{
+    o.LoggingFields = HttpLoggingFields.All;
+    o.CombineLogs = true;
+});
 builder.Services.Configure<RouteHandlerOptions>(o => o.ThrowOnBadRequest = true);
-
-// 전역 예외 처리기 설정
 builder.Services.AddExceptionHandler<GlobalExceptionHandler>();
+
 builder.Services.AddProblemDetails(options =>
 {
     options.CustomizeProblemDetails = ctx =>
     {
-        ctx.ProblemDetails.Extensions["traceId"] = Activity.Current?.Id ?? ctx.HttpContext.TraceIdentifier;
+        var exceptionHandlerFeature = ctx.HttpContext.Features.Get<IExceptionHandlerPathFeature>();
+        if (exceptionHandlerFeature != null)
+        {
+            var exception = exceptionHandlerFeature.Error;
+        }
+
+            ctx.ProblemDetails.Extensions["traceId"] = Activity.Current?.Id ?? ctx.HttpContext.TraceIdentifier;
     };
 });
 
 var app = builder.Build();
 
-// 예외 처리 미들웨어 활성화
+app.UseHttpLogging();
 app.UseExceptionHandler();
-
-app.MapPost("/", (SampleDto dto) => { }).WithName("GetWeatherForecast");
-
+app.UseStatusCodePages();
+app.MapPost("/", (SampleDto dto) => { });
 app.Run();
 
 
