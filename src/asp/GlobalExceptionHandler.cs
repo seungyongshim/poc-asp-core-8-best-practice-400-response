@@ -1,10 +1,7 @@
 ﻿namespace asp;
 using Microsoft.AspNetCore.Diagnostics;
 
-public class GlobalExceptionHandler
-(
-    ILogger<GlobalExceptionHandler> logger
-) : IExceptionHandler
+public class GlobalExceptionHandler : IExceptionHandler
 {
     public async ValueTask<bool> TryHandleAsync
     (
@@ -12,8 +9,6 @@ public class GlobalExceptionHandler
         Exception exception,
         CancellationToken cancellationToken)
     {
-        logger.LogError(exception, "");
-
         await Results.Problem(
             instance: httpContext.Request.Path,
             detail: exception.Message

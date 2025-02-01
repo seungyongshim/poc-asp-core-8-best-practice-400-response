@@ -13,20 +13,11 @@ builder.Services.AddHttpLogging(o =>
 });
 builder.Services.Configure<RouteHandlerOptions>(o => o.ThrowOnBadRequest = true);
 builder.Services.AddExceptionHandler<GlobalExceptionHandler>();
-
-builder.Services.AddProblemDetails(options =>
+builder.Services.AddProblemDetails(o => o.CustomizeProblemDetails = ctx =>
 {
-    options.CustomizeProblemDetails = ctx =>
-    {
-        var exceptionHandlerFeature = ctx.HttpContext.Features.Get<IExceptionHandlerPathFeature>();
-        if (exceptionHandlerFeature != null)
-        {
-            var exception = exceptionHandlerFeature.Error;
-        }
-
-            ctx.ProblemDetails.Extensions["traceId"] = Activity.Current?.Id ?? ctx.HttpContext.TraceIdentifier;
-    };
+    ctx.ProblemDetails.Extensions["traceId"] = Activity.Current?.Id ?? ctx.HttpContext.TraceIdentifier;
 });
+
 
 var app = builder.Build();
 
